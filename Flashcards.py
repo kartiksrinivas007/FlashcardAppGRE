@@ -2,7 +2,7 @@
 from tqdm import tqdm
 import pickle
 from argparse import ArgumentParser
-
+import os
 class Flashcards:
     def __init__(self, data) -> None:
         self.data = data
@@ -32,6 +32,11 @@ class Flashcards:
                 break
             self.add_card(question, answer)
         self.save()
+         ### push and commit to git
+         
+        os.system("git add data.pkl")
+        os.system("git commit -m 'added new flashcards'")
+        os.system("git push -u origin master")
         pass
     
     def test(self):
