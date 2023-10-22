@@ -10,4 +10,4 @@ To add flashcards
 python3 flashcard.py -t
 ```
 
-To test fleshcards
+To test flashcards
