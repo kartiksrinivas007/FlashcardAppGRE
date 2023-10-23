@@ -21,6 +21,8 @@ class Flashcards:
         question = input()
         print("Enter updated answer:")
         answer = input()
+        # print("Enter updated level:")
+        # level = input()
         self.data[index] = {"question": question, "answer": answer}
         self.save()
         pass
@@ -30,7 +32,7 @@ class Flashcards:
         pass
     
     def save(self):
-        with open("data.pkl", "wb") as f:
+        with open(args.path, "wb") as f:
             pickle.dump(self.data, f)
     
     def add_cards(self):
@@ -39,13 +41,15 @@ class Flashcards:
             question = input()
             print("Enter answer or q to quit:")
             answer = input()
+            # print("Enter level:")
+            # level = input()
             if(answer == "q"):
                 break
             self.add_card(question, answer)
         self.save()
          ### push and commit to git
          
-        os.system("git add data.pkl")
+        os.system(f"git add {args.path}")
         os.system("git commit -m 'added new flashcards'")
         os.system("git push -u origin master")
         pass
@@ -58,7 +62,7 @@ class Flashcards:
                 result = input()
                 if(result == "q"):
                     break
-                elif(result == "c"):
+                elif(result == ""):
                     corr_count += 1
                 elif(result == "u"):
                     self.update(i)
@@ -67,7 +71,12 @@ class Flashcards:
                     pass
                 else:
                     pass
+                
+                # print("Enter level")
+                # level = input()
+                # self.data[i]["level"] = level
                 print(self.show_answer(i))
+                
             self.weak_list = list(set(self.weak_list))
             pickle.dump(self.weak_list, open("weak.pkl", "wb"))
             print("Correct count: ", corr_count)
@@ -90,8 +99,9 @@ class Flashcards:
                 print(self.show_answer(i))
             self.weak_list = list(set(self.weak_list))
             pickle.dump(self.weak_list, open("weak.pkl", "wb"))
-        os.system("git add data.pkl")
-        os.system("git commit -m 'added new flashcards'")
+        os.system(f"git add {args.path}")
+        os.system("git add weak.pkl")
+        os.system("git commit -am 'added new flashcards'")
         os.system("git push -u origin master")
     
     def show_related(self, word):
@@ -118,6 +128,7 @@ if __name__ == "__main__":
     parser.add_argument("-w", "--weak", action="store_true", help="Test weaker flashcards")
     parser.add_argument("-s", "--search", action="store_true", help="Search for a word")
     parser.add_argument("-i", "--start_index", type=int, default=0, help="Start index for testing")
+    parser.add_argument("-p", "--path", type=str, default="data.pkl", help="Path to the data list to create")
     parser.set_defaults(add=False)
     parser.set_defaults(test=False)
     parser.set_defaults(weak=False)
@@ -125,10 +136,10 @@ if __name__ == "__main__":
     args = parser.parse_args()
         
     try:
-        with open("data.pkl", "rb") as f:
+        with open(args.path, "rb") as f:
             pass
     except:
-        with open("data.pkl", "wb") as f:
+        with open(args.path, "wb") as f:
             pickle.dump([], f)
             
     try:
@@ -138,7 +149,7 @@ if __name__ == "__main__":
         with open("weak.pkl", "wb") as f:
             pickle.dump([], f)
     
-    with open("data.pkl", "rb") as f:
+    with open(args.path, "rb") as f:
         data = pickle.load(f)
         
     with open("weak.pkl", "rb") as f:
