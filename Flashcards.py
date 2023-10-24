@@ -48,7 +48,7 @@ class Flashcards:
             self.add_card(question, answer)
         self.save()
          ### push and commit to git
-         
+        print("total_length = ", len(self.data))
         os.system(f"git add {args.path}")
         os.system("git commit -m 'added new flashcards'")
         os.system("git push -u origin master")
@@ -78,7 +78,8 @@ class Flashcards:
                 print(self.show_answer(i))
                 
             self.weak_list = list(set(self.weak_list))
-            pickle.dump(self.weak_list, open("weak.pkl", "wb"))
+            weak_path = "weak.pkl" if args.path == "data.pkl" else f"{args.path}_weak.pkl"
+            pickle.dump(self.weak_list, open(weak_path, "wb"))
             print("Correct count: ", corr_count)
         if(args.weak == True):
             print("Weak flashcards:")
@@ -98,10 +99,11 @@ class Flashcards:
                     pass
                 print(self.show_answer(i))
             self.weak_list = list(set(self.weak_list))
-            pickle.dump(self.weak_list, open("weak.pkl", "wb"))
+            weak_path = "weak.pkl" if args.path == "data.pkl" else f"{args.path}_weak.pkl"
+            pickle.dump(self.weak_list, open(weak_path, "wb"))
         os.system(f"git add {args.path}")
-        os.system("git add weak.pkl")
-        os.system("git commit -am 'added new flashcards'")
+        os.system(f"git add {weak_path}")
+        os.system("git commit -m 'added new flashcards'")
         os.system("git push -u origin master")
     
     def show_related(self, word):
@@ -110,7 +112,7 @@ class Flashcards:
                 print(self.show_question(i))
                 input()
                 print(self.show_answer(i))
-                for k in [-2,-1,0,1,2]:
+                for k in [-1,0,1]:
                     try:
                         print(self.show_question(i+k))
                         input()
@@ -142,19 +144,23 @@ if __name__ == "__main__":
         with open(args.path, "wb") as f:
             pickle.dump([], f)
             
+    
+    weak_path = "weak.pkl" if args.path == "data.pkl" else f"{args.path}_weak.pkl"
+   
     try:
-        with open("weak.pkl", "rb") as f:
+        with open(weak_path, "rb") as f:
             pass
     except:
-        with open("weak.pkl", "wb") as f:
+        with open(weak_path, "wb") as f:
             pickle.dump([], f)
     
     with open(args.path, "rb") as f:
         data = pickle.load(f)
         
-    with open("weak.pkl", "rb") as f:
+    with open(weak_path, "rb") as f:
         weak_list = pickle.load(f)
         
+    # print(len(weak_list))
     
     Flashcards = Flashcards(data, weak_list)
     
