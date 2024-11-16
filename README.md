@@ -1,12 +1,18 @@
+## Flashcard Application
 
-To add flashcards
+---
+
+This is a simple flashcard application I built to improve vocabulary for the GRE
+Depending on the user preferences, it stores the words onto a pickle.
+
+### To add flashcards
 ---
 ```
 python3 flashcards.py -a -p={path to main pickle file} 
 ```
 
 
-To test flashcards
+### To test flashcards
 ---
 
 ```
